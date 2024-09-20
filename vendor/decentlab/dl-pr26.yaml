@@ -1,4 +1,4 @@
-name: DL-PR26
+name: DL-PR26 - Pressure / Liquid Level and Temperature Sensor
 description: The Decentlab DL-PR26 consists of a pressure/liquid level sensor and a temperature sensor. It is made for measuring and monitoring liquid levels and pressure in tanks, wells, groundwater, boreholes, and also leak detection, and pump monitoring.
 
 hardwareVersions:
@@ -7,7 +7,7 @@ hardwareVersions:
     partNumber: DL-PR26-001
 
 firmwareVersions:
-  - version: '1.5.7'
+  - version: 1.5.7
     numeric: 157
     hardwareVersions:
       - '1'
@@ -51,7 +51,7 @@ operatingConditions:
     max: 50
   relativeHumidity:
     min: 0
-    max: 1.00
+    max: 1.0
 
 ipCode: IP67
 

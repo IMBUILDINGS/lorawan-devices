@@ -65,7 +65,14 @@ function decodeUplink(input) {
 			};
 		}
 		data.Device = getDeviceName(input.bytes[1]);
-		data.Volt = input.bytes[3]/10;
+		if (input.bytes[3] & 0x80)
+		{
+			var tmp_v = input.bytes[3] & 0x7F;
+			data.Volt = (tmp_v / 10).toString() + '(low battery)';
+		}
+		else
+			data.Volt = input.bytes[3]/10;
+
 		data.ADCRaw = (input.bytes[4] << 8 | input.bytes[5]);
 		
 		break;
@@ -83,6 +90,7 @@ function decodeUplink(input) {
 			data.MinTime = (input.bytes[2]<<8 | input.bytes[3]);
 			data.MaxTime = (input.bytes[4]<<8 | input.bytes[5]);
 			data.BatteryChange = input.bytes[6]/10;
+			data.ADCRawChange = (input.bytes[7]<<8 | input.bytes[8]);
 		}
 		break;
 		
@@ -113,9 +121,10 @@ function encodeDownlink(input) {
 	  var mint = input.data.MinTime;
 	  var maxt = input.data.MaxTime;
 	  var batteryChg = input.data.BatteryChange * 10;
+	  var adcChg = input.data.ADCRawChange;
 	  
 	  port = 7;
-	  ret = ret.concat(getCmdID, devid, (mint >> 8), (mint & 0xFF), (maxt >> 8), (maxt & 0xFF), batteryChg, 0x00, 0x00, 0x00, 0x00);
+	  ret = ret.concat(getCmdID, devid, (mint >> 8), (mint & 0xFF), (maxt >> 8), (maxt & 0xFF), batteryChg, (adcChg >> 8), (adcChg & 0xFF), 0x00, 0x00);
   }
   else if (input.data.Cmd == "ReadConfigReportReq")
   {
@@ -140,6 +149,7 @@ function decodeDownlink(input) {
 			data.MinTime = (input.bytes[2]<<8 | input.bytes[3]);
 			data.MaxTime = (input.bytes[4]<<8 | input.bytes[5]);
 			data.BatteryChange = input.bytes[6]/10;
+			data.ADCRawChange = (input.bytes[7]<<8 | input.bytes[8])
 		}
 		else if (input.bytes[0] === getCmdToID("ReadConfigReportReq"))
 		{

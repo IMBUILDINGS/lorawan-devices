@@ -21,6 +21,8 @@ firmwareVersions:
         # Unique identifier of the profile (lowercase, alphanumeric with dashes, max 36 characters)
         id: sharky-module-profile
 
+deviceType: module
+
 # Dimensions in mm (optional)
 # Use width, height, length and/or diameter
 dimensions:
@@ -29,7 +31,7 @@ dimensions:
 
 # Operating conditions (optional)
 operatingConditions:
-  # Temperature (Celcius)
+  # Temperature (Celsius)
   temperature:
     min: -40
     max: 85

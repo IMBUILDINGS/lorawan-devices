@@ -1,0 +1,8 @@
+endDevices:
+  - cubicmeter
+profileIDs:
+  '1':
+    endDeviceID: 'cubicmeter'
+    firmwareVersion: '1.0'
+    hardwareVersion: '2.0'
+    region: 'EU863-870'

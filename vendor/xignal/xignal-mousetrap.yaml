@@ -1,4 +1,4 @@
-name: Xignal Mouse Trap
+name: Mouse Trap
 description: Intelligent mouse trap made by DimoSystems
 
 # Hardware versions (optional, use when you have revisions)
@@ -65,7 +65,7 @@ battery:
 
 # Operating conditions (optional)
 operatingConditions:
-  # Temperature (Celcius)
+  # Temperature (Celsius)
   temperature:
     min: -30
     max: 85

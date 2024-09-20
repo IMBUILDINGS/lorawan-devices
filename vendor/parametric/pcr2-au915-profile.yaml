@@ -1,8 +1,3 @@
-# Vendor profile ID, can be freely issued by the vendor
-# This vendor profile ID is also used on the QR code for LoRaWAN devices, see
-# https://lora-alliance.org/sites/default/files/2020-10/LoRa_Alliance_Vendor_ID_for_QR_Code.pdf
-#vendorProfileID:
-
 # LoRaWAN MAC version: 1.0, 1.0.1, 1.0.2, 1.0.3, 1.0.4 or 1.1
 macVersion: 1.0.2
 # LoRaWAN Regional Parameters version. Values depend on the LoRaWAN version:
@@ -46,7 +41,8 @@ supportsClassB: false
 #pingSlotFrequency: 869.525
 
 # Whether the end device supports class C
-supportsClassC: true
+
+supportsClassC: false
 # If your device supports class C, uncomment the following fields:
 # Maximum delay for the end device to answer a MAC request or confirmed downlink frame (seconds)
-classCTimeout: 60
+# classCTimeout: 60

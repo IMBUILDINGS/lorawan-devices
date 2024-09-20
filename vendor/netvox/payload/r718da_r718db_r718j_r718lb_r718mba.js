@@ -22,6 +22,8 @@ function getDeviceName(dev){
 	139: "R730DB",
 	141: "R730LB",
 	151: "R718QA",
+	158: "R311K",
+	159: "R718VA",
 	168: "R311DA",
 	169: "R311DB",
 	183: "R720F"
@@ -65,6 +67,10 @@ function getDeviceType(devName){
 	  return 141;
   else if (devName == "R718QA")
       return 151;
+  else if (devName == "R311K")
+      return 158;
+  else if (devName == "R718VA")
+      return 159;
   else if (devName == "R311DA")
       return 168;
   else if (devName == "R311DB")
@@ -98,7 +104,14 @@ function decodeUplink(input) {
 			};
 		}
 		data.Device = getDeviceName(input.bytes[1]);
-		data.Volt = input.bytes[3]/10;
+		if (input.bytes[3] & 0x80)
+		{
+			var tmp_v = input.bytes[3] & 0x7F;
+			data.Volt = (tmp_v / 10).toString() + '(low battery)';
+		}
+		else
+			data.Volt = input.bytes[3]/10;
+
 		data.status = input.bytes[4];
 		
 		break;

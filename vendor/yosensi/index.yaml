@@ -1,0 +1,18 @@
+endDevices:
+  - yo-pure-pro
+  - yo-temp
+  - yo-power
+  - yo-360
+  - yo-agribox
+  - yo-modbus
+  - yo-distance
+  - yo-analog
+  - yo-airflow-pro
+  - yo-meter-pulse
+  - yo-pulse
+  - yo-refrigerant-monitor
+  - yo-h2o
+  - yo-people-counter
+  - yo-airflow-pro-dual
+  - yo-ambience
+  - yo-meter-reader-2-0

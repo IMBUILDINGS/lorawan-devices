@@ -1,38 +1,85 @@
-name: ZHAGA smart street light module
-description: Smart street lighting module with ZHAGA socket based on the STM32WL
+name: LoRaWAN street light module (ZHAGA DALI)
+description: Smart street lighting module with ZHAGA socket based on the STM32WL with the 40mm enclosure in diameter is DALI and DALI-2 compatible. We can provide you with just a hardware or both with the complex solution or just a backend with API access.
+
 hardwareVersions:
   - version: 'v1.0'
     numeric: 1
+
 firmwareVersions:
   - # Firmware version
-    version: 'v5.3'
+    version: '1.2'
     numeric: 1
     hardwareVersions:
       - 'v1.0'
+    features:
+      - remote rejoin
+      - transmission interval
     profiles:
       EU863-870:
         lorawanCertified: true
         id: acr-slc-100l-zhaga-dali-profile
-bridgeInterfaces:
-  - dali
+
+sensors:
+  - light
+  - temperature
+
 dimensions:
   width: 40
   length: 40
   height: 40
+
 weight: 120
+
 battery:
   replaceable: false
+
 operatingConditions:
   temperature:
     min: -30
     max: 60
+
 ipCode: IP67
+
 keyProvisioning:
   - custom
+
 keyProgramming:
-  - serial
+  - firmware
+
 keySecurity: read protected
+
+firmwareProgramming:
+  - fuota lorawan
+
 productURL: https://acrios.com/zhaga-lwes-modul/?lang=en
-dataSheetURL: https://wiki.acrios.com/en/ACR_SLC
+
+dataSheetURL: https://wiki.acrios.com/en/SLC
+
+resellerURLs:
+  - name: 'ACRIOS Systems'
+    region:
+      - European Union
+    url: https://acrios.com/?lang=en
+
+msrp:
+  EUR: 69
+
 photos:
-  main: acr-slc-100l-zhaga-dali.jpg
+  main: acr-slc-100l-zhaga-dali.png
+  other:
+    - acr-slc-100l-zhaga-dali-top.png
+
+compliances:
+  safety:
+    - body: IEC
+      norm: EN
+      standard: 62368-1
+  radioEquipment:
+    - body: ETSI
+      norm: EN
+      standard: 301 489-1
+      version: 2.2.0
+    - body: ETSI
+      norm: EN
+      standard: 301 489-3
+      version: 2.1.0

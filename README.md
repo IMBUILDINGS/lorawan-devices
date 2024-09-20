@@ -1,8 +1,12 @@
-# Device Repository for LoRaWAN
+# Device Repository for LoRaWAN®
 
 The Device Repository contains information about LoRaWAN end devices. The Device Repository acts as key data source for device catalogs and onboarding devices on LoRaWAN networks.
 
-This repository is a collaborative effort, driven by The Things Network community. We welcome device makers to contribute information about their end devices to help users find and onboard their devices.
+We welcome device makers to contribute information to help users find and onboard end devices in products and services developed and offered by The Things Industries, including [The Things Stack](https://www.thethingsindustries.com/docs/).
+
+## Database Protection Right
+
+The contents of this Device Repository is obtained, verified and structured by The Things Industries B.V. and The Things Network Foundation. As such, the Device Repository is a database protected by copyright and sui generis right as defined by the Database Directive ([Directive 96/9/EC of the European Parliament and of the Council](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A31996L0009)). You may not extract and/or reuse the Device Repository as a whole or a substantial part of its content. You are, however, permitted to reuse or extract information about an individual end device.
 
 ## Example
 
@@ -24,9 +28,10 @@ One of the operating systems:
 
 Development dependencies:
 
-- Node.js version 16.x
+- Node.js version 16.x 
+  - (This is recommended, as newer versions may give errors)
 - npm version 8.x
-- Go version 1.17.x
+- Go version 1.18.x
 
 To check your Node.js, npm and Go versions:
 
@@ -54,6 +59,8 @@ Pull requests are validated automatically. If there are any validation or format
 $ make validate fmt
 ```
 
+Contributors are required to sign the [Contributor License Agreement](https://gist.github.com/johanstokking/58081d646d6dd4f93b3d85cd5c62377c).
+
 ## Validation
 
 The Device Repository contains tooling to validate all data against a schema. This is necessary for all data to be loaded automatically in The Things Stack and other services.
@@ -64,11 +71,38 @@ To validate data:
 $ make validate
 ```
 
+The validation also supports validating a single vendor's files:
+
+```bash
+$ make validate VENDOR_ID=<id-of-vendor>
+```
+
 [Visual Studio Code](https://code.visualstudio.com/) is a great editor for editing the Device Repository. You can validate your data automatically using the [YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml).
 
 The YAML plugin supports you with filling out the document. When hitting Ctrl + Space, all fields are shown. The Debug Console of Visual Studio provides feedback by highlighting the incorrect fields.
 
 ![Validation in Visual Studio Code](./doc/vs-code-validation.png)
+
+To use the YAML plugin correctly, you need to assign the schema to the plugin. To do this, open the command palette (**Shift+Command+P** on Mac or **Ctrl+Shift+P** for Windows/Linux) and search for **Preferences: Open Workspace Settings (JSON)**. Then add the following lines:
+
+```json
+{
+  // other settings go here
+
+  "yaml.schemas": {
+          "https://schema.thethings.network/devicerepository/1/schema": "vendor/**/*.yaml"
+  }
+}
+```
+
+## Setup script
+
+To help you get started with adding vendors and devices to the repo we made a script that creates all the necessary files with some basic information. To run the script, open a terminal (preferably inside a code editor like VSCode) and enter:
+
+```bash
+$ make setup
+```
+After that just follow the instructions given to you by the script. 
 
 ## Files and Directories
 
@@ -88,19 +122,19 @@ An example directory structure with a vendor named `company-x` that produces two
 ```bash
 lorawan-devices
 ├── vendor
-│   ├── index.yaml              # vendor index (1)
+│   ├── index.yaml                    # vendor index (1)
 │   ├── module-maker
 │   │   └── module-profile-eu868.yaml # generic end device profile for EU868 (4)
 │   ├── company-x
-│   │   ├── index.yaml          # vendor device index (2)
-│   │   ├── logo.svg            # vendor logo
-│   │   ├── device-a.jpg        # photo of device-a
-│   │   ├── device-a.yaml       # device-a definition (3)
-│   │   ├── device-b.jpg        # photo of device-b
-│   │   ├── device-b.yaml       # device-b definition (3)
+│   │   ├── index.yaml                # vendor device index (2)
+│   │   ├── logo.svg                  # vendor logo
+│   │   ├── device-a.png              # photo of device-a
+│   │   ├── device-a.yaml             # device-a definition (3)
+│   │   ├── device-b.png              # photo of device-b
+│   │   ├── device-b.yaml             # device-b definition (3)
 │   │   ├── custom-profile-us915.yaml # end device profile for US915 (4)
-│   │   ├── codec.js            # payload codec implementation (6)
-│   │   └── codec.yaml          # payload codec definition (5)
+│   │   ├── codec.js                  # payload codec implementation (6)
+│   │   └── codec.yaml                # payload codec definition (5)
 ```
 
 ### Vendor Index
@@ -148,16 +182,30 @@ All vendor data is referenced from the **Vendor device index** file: `vendor/<ve
 endDevices:
   - device-a
   - device-b
+# The profileIDs is a distinct value for every unique profile listed in the vendor's folder.
+# This value can be freely issued by the vendor and is also used on the QR code for LoRaWAN devices, see
+# https://lora-alliance.org/wp-content/uploads/2020/11/TR005_LoRaWAN_Device_Identification_QR_Codes.pdf#page=8
+# It can either be a combo of device ID + hardware version + firmware version + region, or profile ID + codec ID
+# NOTE: The profileIDs is different from the vendorID.
+profileIDs:
+  '1':
+    endDeviceID: 'device-a'
+    firmwareVersion: '1.0'
+    hardwareVersion: '1.0'
+    region: 'EU863-870'
+  '2':
+    id: 'device-b-profile-915' # Name of the file of the profile 
+    codec: 'device-b-codec' # Name of the yaml file of the codec
 ```
 
-All end device identifiers must be lowercase, alphanumeric with dashes and max 36 characters.
+All end device identifiers must be lowercase, alphanumeric with dashes and max 36 characters. **Make sure you include every device you add.**
 
 ### End Device
 
 For each end device, create an **End device definition** file with the same filename as the identifier in the index: `vendor/<vendor-id>/<device-id>.yaml`:
 
 ```yaml
-name: Device A
+name: Device A # Device name can not contain the vendor name
 description: My first LoRaWAN device
 # Hardware versions (optional)
 hardwareVersions:
@@ -198,26 +246,29 @@ There are many other fields that can be set: hardware versions, firmware version
 
 > **NOTE** It is highly recommended to fill out as many information about the end devices as possible. The definition above is the bare minimum information.
 
+### End Device Image
+
+There are a few guidelines to follow for images:
+- At least 1 image of each device you intent to add.
+- Make sure the image has a transparent background. 
+- Image should be of high quality.
+- The image cannot be bigger then 2000 x 2000 pixels. 
+
 ### End Device Profile
 
 Each referenced end device profile needs to be defined in the **End device profile**, with the same filename as the profile ID: `vendor/<vendor-id>/<profile-id>.yaml`:
 
 ```yaml
-# Vendor profile ID, can be freely issued by the vendor
-# This vendor profile ID is also used on the QR code for LoRaWAN devices, see
-# https://lora-alliance.org/wp-content/uploads/2020/10/LoRa_Alliance_Vendor_ID_for_QR_Code.pdf
-vendorProfileID: 0
-
 # LoRaWAN MAC version: 1.0, 1.0.1, 1.0.2, 1.0.3, 1.0.4 or 1.1
-macVersion: 1.0.3
+macVersion: '1.0.3'
 # LoRaWAN Regional Parameters version. Values depend on the LoRaWAN version:
 #   1.0:   TS001-1.0
 #   1.0.1: TS001-1.0.1
 #   1.0.2: RP001-1.0.2 or RP001-1.0.2-RevB
 #   1.0.3: RP001-1.0.3-RevA
-#   1.0.4: RP002-1.0.0 or RP002-1.0.1
+#   1.0.4: RP002-1.0.0, RP002-1.0.1, RP002-1.0.2, RP002-1.0.3 or RP002-1.0.4
 #   1.1:   RP001-1.1-RevA or RP001-1.1-RevB
-regionalParametersVersion: RP001-1.0.3-RevA
+regionalParametersVersion: 'RP001-1.0.3-RevA'
 
 # Whether the end device supports join (OTAA) or not (ABP)
 supportsJoin: true
@@ -288,6 +339,12 @@ uplinkDecoder:
         data:
           direction: 'N'
           speed: 32
+      # Normalized output, uses the normalizeUplink function (optional)
+      normalizedOutput:
+        data:
+          - wind:
+              speed: 16.4608
+              direction: 0
 # Downlink encoder encodes JSON object into a binary data downlink (optional)
 downlinkEncoder:
   fileName: codec.js
@@ -316,110 +373,10 @@ downlinkDecoder:
 
 The actual **Payload codec implementation** is in the referenced filename: `vendor/<vendor-id>/<codec-filename>`.
 
-An example codec for a wind direction and speed sensor with controllable LED looks like this:
+See [The Things Stack documentation](https://www.thethingsindustries.com/docs/integrations/payload-formatters/javascript) for how to write JavaScript functions for decoding, normalizing and encoding data.
 
-```js
-var directions = ["N", "E", "S", "W"];
-var colors = ["red", "green"];
-
-// input = { fPort: 1, bytes: [1, 62] }
-function decodeUplink(input) {
-  switch (input.fPort) {
-  case 1:
-    return {
-      // Decoded data
-      data: {
-        direction: directions[input.bytes[0]],
-        speed: input.bytes[1]
-      }
-    }
-  default:
-    return {
-      errors: ["unknown FPort"]
-    }
-  }
-}
-
-// input = { data: { led: "green" } }
-function encodeDownlink(input) {
-  var i = colors.indexOf(input.data.led);
-  if (i === -1) {
-    return {
-      errors: ["invalid LED color"]
-    }
-  }
-  return {
-    // LoRaWAN FPort used for the downlink message
-    fPort: 2,
-    // Encoded bytes
-    bytes: [i]
-  }
-}
-
-// input = { fPort: 2, bytes: [1] }
-function decodeDownlink(input) {
-  switch (input.fPort) {
-  case 2:
-    return {
-      // Decoded downlink (must be symmetric with encodeDownlink)
-      data: {
-        led: colors[input.bytes[0]]
-      }
-    }
-  default:
-    return {
-      errors: ["invalid FPort"]
-    }
-  }
-}
-```
-
-#### Errors and Warnings
-
-Scripts can return warnings and errors to inform the application layer of potential issues with the data or indicate that the payload is malformatted.
-
-The warnings and errors are string arrays. If there are any errors, the message fails. Any warnings are added to the message.
-
-Example warning:
-
-```js
-// input = { fPort: 1, bytes: [1, 2, 3] }
-function decodeUplink(input) {
-  var warnings = [];
-  var battery = input.bytes[0] << 8 | input.bytes[1];
-  if (battery < 2000) {
-    warnings.push("unreliable battery level");
-  }
-  return {
-    // Decoded data
-    data: {
-      battery: battery
-    },
-    // Warnings
-    warnings: warnings
-  }
-}
-```
-
-Example error:
-
-```js
-function encodeDownlink(input) {
-  if (typeof input.data.gate !== 'boolean') {
-    return {
-      errors: [
-        "missing required field: gate"
-      ]
-    }
-  }
-  return {
-    fPort: 1,
-    bytes: [input.data.gate ? 1 : 0]
-  }
-}
-```
 ## Legal
 
-The API is distributed under [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0). See `LICENSE` for more information.
+Copyright © 2020-2022 The Things Industries B.V.
 
 All product names, logos, and brands are property of their respective owners. All company, product and service names used in the Device Repository are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.

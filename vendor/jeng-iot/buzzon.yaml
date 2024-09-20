@@ -35,6 +35,9 @@ firmwareVersions:
       #   lorawanCertified: true
       #   codec: windsensor-codec
 
+sensors:
+  - button
+
 # Dimensions in mm (optional)
 # Use width, height, length and/or diameter
 dimensions:
@@ -52,7 +55,7 @@ battery:
 
 # Operating conditions (optional)
 operatingConditions:
-  # Temperature (Celcius)
+  # Temperature (Celsius)
   temperature:
     min: -25
     max: 60

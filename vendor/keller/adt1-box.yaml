@@ -1,4 +1,4 @@
-name: ADT1 Box
+name: ADT1 Box - Remote Transmitter
 description: The KELLER ADT1-Box is an autonomous device that can be linked with digital level probes and pressure transmitters in the KELLER D and X product lines. The measured data can be collected through a LoRaWAN® network.
 
 firmwareVersions:
@@ -78,7 +78,7 @@ keySecurity: none
 #documentationURL: https://docs.kolibricloud.ch/sending-technology/lora-technology/
 #githubURL: https://github.com/KELLERAGfuerDruckmesstechnik
 productURL: https://keller-druck.com/en/products/data-loggers/remote-transmission-units-with-data-logger/adt1-box
-dataSheetURL: https://download.keller-druck.com/api/download/q3sWTxfeyHkzDXiezeoXjj/en/2020-10.pdf
+dataSheetURL: https://download.keller-druck.com/api/download/q3sWTxfeyHkzDXiezeoXjj/en/2022-08.pdf
 
 photos:
   main: adt1-box-open.jpg

@@ -1,4 +1,4 @@
-name: LT22222-L
+name: LT22222-L - I/O Controller
 description: The Dragino LT22222-L is a LoRaWAN® I/O module that contains different I/O Interfaces such as analog current input, analog voltage input, relay output, digital input, and digital output. The LT series I/O modules are designed to simplify the installation of I/O monitoring.
 
 # Hardware versions (optional, use when you have revisions)
@@ -58,8 +58,49 @@ firmwareVersions:
         lorawanCertified: true
         codec: lt22222-l-codec
 
-  - version: 'lt22222-l abp'
+  - version: '1.6.0'
     numeric: 2
+    profiles:
+      EU863-870:
+        # Unique identifier of the profile (lowercase, alphanumeric with dashes, max 36 characters)
+        id: eu868-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      EU433:
+        id: eu433-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      US902-928:
+        id: us915-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      KR920-923:
+        id: kr920-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      AU915-928:
+        id: au915-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      RU864-870:
+        id: ru864-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      IN865-867:
+        id: in865-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      CN470-510:
+        id: cn470-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+      AS923:
+        id: as923-c-profile
+        lorawanCertified: true
+        codec: lt22222-l-codec
+
+  - version: 'lt22222-l abp'
+    numeric: 3
     profiles:
       EU863-870:
         id: eu868-c-abp-profile
@@ -97,6 +138,7 @@ firmwareVersions:
         id: ru864-c-abp-profile
         lorawanCertified: true
         codec: lt22222-l-codec
+
 # Sensors that this device features (optional)
 # Valid values are:
 # 4-20 ma, accelerometer, altitude, analog input, auxiliary, barometer, battery, button, bvoc, co, co2, conductivity,
@@ -105,9 +147,9 @@ firmwareVersions:
 # power, precipitation, pressure, proximity, pulse count, pulse frequency, radar, rainfall, rssi, snr, solar radiation,
 # sound, strain, surface temperature, temperature, tilt, time, tvoc, uv, vapor pressure, velocity, vibration, voltage,
 # water potential, water, weight, wifi ssid, wind direction, wind speed.
-#sensors:
-#  - wind direction
-#  - wind speed
+sensors:
+  - digital input
+  - analog input
 
 # Battery information (optional)
 #battery:
@@ -116,7 +158,7 @@ firmwareVersions:
 
 # Operating conditions (optional)
 # operatingConditions:
-# Temperature (Celcius)
+# Temperature (Celsius)
 # temperature:
 #   min: -30
 #   max: 85

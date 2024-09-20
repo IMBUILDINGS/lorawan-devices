@@ -73,8 +73,9 @@ type EndDevice struct {
 		Diameter float32 `yaml:"diameter"`
 		Length   float32 `yaml:"length"`
 	} `yaml:"dimensions"`
-	Weight  float32 `yaml:"weight"`
-	Battery *struct {
+	Weight       float32 `yaml:"weight"`
+	DeviceWeight float32
+	Battery      *struct {
 		Replaceable bool   `yaml:"replaceable"`
 		Type        string `yaml:"type"`
 	} `yaml:"battery"`
@@ -192,7 +193,6 @@ func (drs *Store) SetVendorEndDevices(dir config.Dir) error {
 
 // Device returns end device yaml file as a string, and a striped down endDevice struct
 func (drs *Store) Device(vendorID string, endDevice string, dir config.Dir) (*EndDevice, error) {
-
 	fmt.Printf(dir.DeviceRepo.Vendor)
 
 	yamlFile, err := ioutil.ReadFile(dir.DeviceRepo.Vendor + vendorID + "/" + endDevice + ".yaml")

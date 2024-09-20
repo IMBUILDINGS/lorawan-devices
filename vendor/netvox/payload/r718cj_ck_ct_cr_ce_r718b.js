@@ -25,7 +25,7 @@ function getDeviceName(dev){
 	144: "R718CJ",
     145: "R718CK",
 	146: "R718CT",
-	147: "R718CR",
+	147: "R718CN",
 	148: "R718CE",
 	149: "R718B"
   };
@@ -62,7 +62,7 @@ function getDeviceType(devName){
 	  return 145;
   else if (devName == "R718CT")
 	  return 146;
-  else if (devName == "R718CR")
+  else if (devName == "R718CN")
 	  return 147;
   else if (devName == "R718CE")
 	  return 148;
@@ -107,7 +107,14 @@ function decodeUplink(input) {
 			};
 		}
 
-		data.Volt = input.bytes[3]/10;
+		if (input.bytes[3] & 0x80)
+		{
+			var tmp_v = input.bytes[3] & 0x7F;
+			data.Volt = (tmp_v / 10).toString() + '(low battery)';
+		}
+		else
+			data.Volt = input.bytes[3]/10;
+
 		data.Device = getDeviceName(input.bytes[1]);
 		if (input.bytes[4] & 0x80)
 		{

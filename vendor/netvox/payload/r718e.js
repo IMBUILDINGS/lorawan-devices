@@ -18,7 +18,8 @@ function getCfgCmd(cfgcmd){
 
 function getDeviceName(dev){
   var deviceName = {
-	28: "R718E"
+	28: "R718E",
+	199: "R311FA1"
   };
   return deviceName[dev];
 }
@@ -53,6 +54,8 @@ function getCmdToID(cmdtype){
 function getDeviceID(devName){
   if (devName == "R718E")
 	  return 28;
+  else if (devName == "R311FA1")
+  	  return 199;
 }
 
 function padLeft(str, len) {
@@ -115,7 +118,14 @@ function decodeUplink(input) {
 		data.Device = getDeviceName(input.bytes[1]);
 		if (input.bytes[2] === 0x01)
 		{
-			data.Volt = input.bytes[3]/10;
+			if (input.bytes[3] & 0x80)
+			{
+				var tmp_v = input.bytes[3] & 0x7F;
+				data.Volt = (tmp_v / 10).toString() + '(low battery)';
+			}
+			else
+				data.Volt = input.bytes[3]/10;
+
 			data.AccelerationX = parseFloat(float32Process(input.bytes[5]<<8 | input.bytes[4]).toFixed(6));
 			data.AccelerationY = parseFloat(float32Process(input.bytes[7]<<8 | input.bytes[6]).toFixed(6));
 			data.AccelerationZ = parseFloat(float32Process(input.bytes[9]<<8 | input.bytes[8]).toFixed(6));
@@ -125,13 +135,16 @@ function decodeUplink(input) {
 			data.VelocityX = parseFloat(float32Process(input.bytes[4]<<8 | input.bytes[3]).toFixed(6));
 			data.VelocityY = parseFloat(float32Process(input.bytes[6]<<8 | input.bytes[5]).toFixed(6));
 			data.VelocityZ = parseFloat(float32Process(input.bytes[8]<<8 | input.bytes[7]).toFixed(6));
-			if (input.bytes[9] & 0x80)
+			if (input.bytes[1] === 0x1C)
 			{
-				var tmpval = (input.bytes[9]<<8 | input.bytes[10]);
-				data.Temp = (0x10000 - tmpval)/10 * -1;
+				if (input.bytes[9] & 0x80)
+				{
+					var tmpval = (input.bytes[9]<<8 | input.bytes[10]);
+					data.Temp = (0x10000 - tmpval)/10 * -1;
+				}
+				else
+					data.Temp = (input.bytes[9]<<8 | input.bytes[10])/10;
 			}
-			else
-				data.Temp = (input.bytes[9]<<8 | input.bytes[10])/10;
 		}
 		
 		break;
